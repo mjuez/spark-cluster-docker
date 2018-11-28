@@ -11,7 +11,7 @@ export SPARK_MASTER_HOST=$(hostname)
 export SPARK_HOME=/spark
 
 # configuring and loading spark environment.
-. $SPARK_HOME/sbin/start-master.sh
+#. $SPARK_HOME/sbin/start-master.sh
 
 mkdir -p $SPARK_MASTER_LOGS
 

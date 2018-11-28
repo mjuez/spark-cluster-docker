@@ -41,4 +41,4 @@ cp -v /spark/conf/spark-env.sh.template /spark/conf/spark-env.sh
 
 EXPOSE 7077 8080 6066
 
-CMD /init.sh
+CMD ["/bin/bash","/init.sh"]
