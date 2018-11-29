@@ -24,6 +24,14 @@ For building the spark master node image, we are specifying the folder containin
 [sudo] docker build ./master -t spark-master:2.4.0
 ```
 
+#### Spark Worker
+
+Analogously, spark worker image can be built with the following command:
+
+``` shell
+[sudo] docker build ./worker -t spark-worker:2.4.0
+```
+
 ### Listing docker images
 
 For obtaining the list of images we have to run the following:
@@ -60,14 +68,6 @@ If we want to remove all docker images:
 (The `-q` parameter of `docker images` command returns a list of IDs)
 
 **NOTE**: If a docker container is using a image, that image could not be removed until the docker container is removed.
-
-#### Spark Worker
-
-Analogously, spark worker image can be built with the following command:
-
-``` shell
-[sudo] docker build ./worker -t spark-worker:2.4.0
-```
 
 ### Running docker containers
 
