@@ -78,16 +78,23 @@ When a image is build, the next step is to run it. The command `docker run` will
 The command we are using for running the spark master docker container is the following:
 
 ``` shell
-[sudo] docker run -dtP --name spark-master \ 
-			-h spark-master \
-			-m 2g \
-			--cpuset-cpus 1 \
-			spark-master:2.4.0
+[sudo] docker run -dtP --name spark-master -h spark-master --cpus 1 spark-master:2.4.0
 ```
+
+The explanation of the arguments used is:
+
+* `-dtP`: `d` means detached, the container will run in background. `t` is for allocating a TTY. `P` is for exposing publicly all ports.
+* `--name`: TODO
 
 #### Spark Worker
 
-TODO
+Analogously, a spark worker can be runned like this:
+
+``` shell                                                                                                                                              
+[sudo] docker run -dt --name spark-worker-01 -h spark-worker-1 --cpus 1 --link spark-master:spark-master spark-worker:2.4.0
+```
+
+The main difference is that this time we are not exposing the ports because, although it can be done, is not needed to access the workers UI (`-P` argument). Also, a new parameter `--link` was set, this is to link the worker to the master network.
 
 ### Listing docker containers
 
