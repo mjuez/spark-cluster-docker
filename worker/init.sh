@@ -3,15 +3,15 @@
 # Author: Mario Juez-Gil <mariojg@ubu.es>
 # Spark master node init script.
 #
-# source: https://github.com/big-data-europe/docker-spark/blob/master/master/master.sh
+# source: https://github.com/big-data-europe/docker-spark/blob/master/worker/worker.sh
 
 set -eu pipefail
 
 export SPARK_HOME=/spark
 
 # configuring and loading spark environment.
-. "/spark/sbin/spark-config.sh"
-. "/spark/bin/load-spark-env.sh"
+#. "/spark/sbin/spark-config.sh"
+#. "/spark/bin/load-spark-env.sh"
 
 mkdir -p $SPARK_WORKER_LOGS
 

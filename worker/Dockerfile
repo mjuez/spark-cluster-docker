@@ -13,9 +13,9 @@ ARG TAR=spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
 
 # environment variables
 ENV PATH $PATH:/spark/bin
-ENV SPARK_WORKER_WEBUI_PORT = 8081
-ENV SPARK_WORKER_LOGS = /spark/logs
-ENV SPARK_MASTER = "spark://spark-master:7077"
+ENV SPARK_WORKER_WEBUI_PORT 8081
+ENV SPARK_WORKER_LOGS /spark/logs
+ENV SPARK_MASTER "spark://spark-master:7077"
 
 LABEL Description="Apache Spark" \
       "Spark Version"="$SPARK_VERSION"
