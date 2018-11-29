@@ -40,7 +40,7 @@ For obtaining the list of images we have to run the following:
 [sudo] docker images
 ```
 
-The output will be somethink like:
+The output will be something like:
 
 ```
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
@@ -78,20 +78,23 @@ When a image is build, the next step is to run it. The command `docker run` will
 The command we are using for running the spark master docker container is the following:
 
 ``` shell
-[sudo] docker run -dtP --name spark-master -h spark-master --cpus 1 spark-master:2.4.0
+[sudo] docker run -dP --name spark-master -h spark-master --cpus 1 spark-master:2.4.0
 ```
 
 The explanation of the arguments used is:
 
-* `-dtP`: `d` means detached, the container will run in background. `t` is for allocating a TTY. `P` is for exposing publicly all ports.
-* `--name`: TODO
+* `-dP`: `d` means detached, the container will run in background. `P` is for exposing publicly all ports.
+* `--name`: for setting the container name.
+* `-h`: for setting the host name of the container.
+* `--cpus` for setting the number of cores associated to the container
+* `spark-master:2.4.0`: the docker image to run.
 
 #### Spark Worker
 
 Analogously, a spark worker can be runned like this:
 
 ``` shell                                                                                                                                              
-[sudo] docker run -dt --name spark-worker-01 -h spark-worker-1 --cpus 1 --link spark-master:spark-master spark-worker:2.4.0
+[sudo] docker run -d --name spark-worker-01 -h spark-worker-1 --cpus 1 --link spark-master:spark-master spark-worker:2.4.0
 ```
 
 The main difference is that this time we are not exposing the ports because, although it can be done, is not needed to access the workers UI (`-P` argument). Also, a new parameter `--link` was set, this is to link the worker to the master network.
@@ -102,6 +105,14 @@ If we want to list all running docker containers, we have to use:
 
 ``` shell
 [sudo] docker ps
+```
+
+The output will be something like:
+
+```
+CONTAINER ID        IMAGE                COMMAND                 CREATED             STATUS              PORTS                                                                       NAMES
+388ca8feaee3        spark-worker:2.4.0   "/bin/sh -c /init.sh"   34 seconds ago      Up 33 seconds       8081/tcp                                                                    spark-worker-01
+aad0b9eaab5a        spark-master:2.4.0   "/bin/bash /init.sh"    2 minutes ago       Up 2 minutes        0.0.0.0:32773->6066/tcp, 0.0.0.0:32772->7077/tcp, 0.0.0.0:32771->8080/tcp   spark-master
 ```
 
 For the list of running and stopped docker containers the parameter `-a` is needed:
@@ -122,4 +133,36 @@ For example, if we want to kill the docker container named `spark-master`, we ha
 
 Instead of the container name, it can be used the container id.
 
+### Removing docker containers
 
+A docker container can be removed through `docker rm` command. It works similarly to the `docker rmi` shown before.
+
+A container can be removed using its name, for example `spark-worker-01`, or its ID, for example `388ca8feaee3`. It should be used as follows:
+
+```shell
+[sudo] docker rm spark-worker-01
+```
+
+If we want to remove all containers (must be stopped), we can use the following command:
+
+```shell
+[sudo] docker rm $([sudo] docker ps -a -q)
+```
+
+Where `-a` parameter lists all docker containers (including stopped) and `-q` is for returning IDs only.
+
+**NOTE:** If we try to remove a running container, docker will throw an error. You must kill it before, so, a more useful command for removing all containers could be:
+
+```shell
+[sudo] docker kill $([sudo] docker ps -q) && [sudo] docker rm $([sudo] docker ps -a -q)
+```
+
+### Accessing to a running docker container shell
+
+Since a docker container is a virtual machine, can be useful to access to its shell, like a SSH connection to a remote machine. For this purpose, we can use the `docker exec` command, for example, if we want to access to the shell of the container named `spark-master`, can be done through:
+
+```shell
+[sudo] docker exec -it spark-master /bin/bash 
+```
+
+Where `-i` param means that we are running the command in interactive mode, `-t` is for attaching a TTY session, and the last `/bin/bash` refers to the shell used.
