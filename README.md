@@ -20,14 +20,99 @@ The dockerfiles inside `/master` and `/worker` are for building docker images wi
 
 For building the spark master node image, we are specifying the folder containing the master node image Dockerfile. Then, with the -t parameter we are specifying the image name (spark-master) and the tag (2.4.0). I used the same tag as spark version, but docker image tag and spark version do not need to match.
 
-```bash
-(sudo) docker build ./master -t spark-master:2.4.0
+```shell
+[sudo] docker build ./master -t spark-master:2.4.0
 ```
+
+### Listing docker images
+
+For obtaining the list of images we have to run the following:
+
+```shell
+[sudo] docker images
+```
+
+The output will be somethink like:
+
+```
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+spark-worker        2.4.0               cd095ff645ba        29 minutes ago      338MB
+spark-master        2.4.0               8c293e566e90        16 hours ago        338MB
+alpine              latest              196d12cf6ab1        2 months ago        4.41MB
+```
+
+### Removing docker images
+
+For removing an image we will use `docker rmi` followed the `IMAGE ID`:
+
+For example, if we want to remove the spark-worker image of the previous example, we need to run:
+
+```shell
+[sudo] docker rmi cd095ff645ba
+```
+
+If we want to remove all docker images:
+
+```shell
+[sudo] docker rmi $([sudo] docker images -q)
+```
+
+(The `-q` parameter of `docker images` command returns a list of IDs)
+
+**NOTE**: If a docker container is using a image, that image could not be removed until the docker container is removed.
 
 #### Spark Worker
 
 Analogously, spark worker image can be built with the following command:
 
-```bash
-(sudo) docker build ./worker -t spark-worker:2.4.0
+``` shell
+[sudo] docker build ./worker -t spark-worker:2.4.0
 ```
+
+### Running docker containers
+
+When a image is build, the next step is to run it. The command `docker run` will be used.
+
+#### Spark Master
+
+The command we are using for running the spark master docker container is the following:
+
+``` shell
+[sudo] docker run -dtP --name spark-master \ 
+			-h spark-master \
+			-m 2g \
+			--cpuset-cpus 1 \
+			spark-master:2.4.0
+```
+
+#### Spark Worker
+
+TODO
+
+### Listing docker containers
+
+If we want to list all running docker containers, we have to use:
+
+``` shell
+[sudo] docker ps
+```
+
+For the list of running and stopped docker containers the parameter `-a` is needed:
+
+``` shell
+[sudo] docker ps -a
+```
+
+### Stopping docker containers
+
+For stopping (killing) a docker container, the command `docker kill` will be used.
+
+For example, if we want to kill the docker container named `spark-master`, we have to execute:
+
+``` shell
+[sudo] docker kill spark-master
+```
+
+Instead of the container name, it can be used the container id.
+
+
