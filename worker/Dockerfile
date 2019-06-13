@@ -40,4 +40,4 @@ cp -v /spark/conf/spark-env.sh.template /spark/conf/spark-env.sh
 
 EXPOSE 8081
 
-CMD /init.sh
+CMD ["/bin/bash","/init.sh"]
