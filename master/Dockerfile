@@ -6,8 +6,8 @@
 FROM alpine:latest
 MAINTAINER Mario Juez-Gil <mariojg@ubu.es>
 
-# https://archive.apache.org/dist/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz
-ARG SPARK_VERSION=2.4.0
+# https://archive.apache.org/dist/spark/spark-2.4.3/spark-2.4.3-bin-hadoop2.7.tgz
+ARG SPARK_VERSION=2.4.3
 ARG HADOOP_VERSION=2.7
 ARG TAR=spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
 

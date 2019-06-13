@@ -10,7 +10,7 @@ As this repository has been created by a novel user of both, docker and spark, t
 
 In spark there are two types of nodes, master and worker. Since the spark distribution is the same for both, docker image for master and worker will be slightly different.
 
-The master node needs to expose up to three ports (web ui, spark master, and REST api), since the worker node only need to expose one (web ui).
+The master node needs to expose up to three ports (web ui, spark master, and REST api), while the worker node only need to expose one (web ui).
 
 ### Building docker images
 
@@ -18,10 +18,10 @@ The dockerfiles inside `/master` and `/worker` are for building docker images wi
 
 #### Spark Master
 
-For building the spark master node image, we are specifying the folder containing the master node image Dockerfile. Then, with the -t parameter we are specifying the image name (spark-master) and the tag (2.4.0). I used the same tag as spark version, but docker image tag and spark version do not need to match.
+For building the spark master node image, we are specifying the folder containing the master node image Dockerfile. Then, with the -t parameter we are specifying the image name (spark-master) and the tag (2.4.3). I used the same tag as spark version, but docker image tag and spark version do not need to match.
 
 ```shell
-[sudo] docker build ./master -t spark-master:2.4.0
+[sudo] docker build ./master -t spark-master:2.4.3
 ```
 
 #### Spark Worker
@@ -29,7 +29,7 @@ For building the spark master node image, we are specifying the folder containin
 Analogously, spark worker image can be built with the following command:
 
 ``` shell
-[sudo] docker build ./worker -t spark-worker:2.4.0
+[sudo] docker build ./worker -t spark-worker:2.4.3
 ```
 
 ### Listing docker images
@@ -44,8 +44,8 @@ The output will be something like:
 
 ```
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-spark-worker        2.4.0               cd095ff645ba        29 minutes ago      338MB
-spark-master        2.4.0               8c293e566e90        16 hours ago        338MB
+spark-worker        2.4.3               cd095ff645ba        29 minutes ago      338MB
+spark-master        2.4.3               8c293e566e90        16 hours ago        338MB
 alpine              latest              196d12cf6ab1        2 months ago        4.41MB
 ```
 
@@ -78,7 +78,7 @@ When a image is build, the next step is to run it. The command `docker run` will
 The command we are using for running the spark master docker container is the following:
 
 ``` shell
-[sudo] docker run -dP --name spark-master -h spark-master --cpus 1 spark-master:2.4.0
+[sudo] docker run -dP --name spark-master -h spark-master --cpus 1 spark-master:2.4.3
 ```
 
 The explanation of the arguments used is:
@@ -87,14 +87,14 @@ The explanation of the arguments used is:
 * `--name`: for setting the container name.
 * `-h`: for setting the host name of the container.
 * `--cpus` for setting the number of cores associated to the container
-* `spark-master:2.4.0`: the docker image to run.
+* `spark-master:2.4.3`: the docker image to run.
 
 #### Spark Worker
 
 Analogously, a spark worker can be runned like this:
 
 ``` shell                                                                                                                                              
-[sudo] docker run -d --name spark-worker-01 -h spark-worker-1 --cpus 1 --link spark-master:spark-master spark-worker:2.4.0
+[sudo] docker run -d --name spark-worker-01 -h spark-worker-1 --cpus 1 --link spark-master:spark-master spark-worker:2.4.3
 ```
 
 The main difference is that this time we are not exposing the ports because, although it can be done, is not needed to access the workers UI (`-P` argument). Also, a new parameter `--link` was set, this is to link the worker to the master network.
@@ -111,8 +111,8 @@ The output will be something like:
 
 ```
 CONTAINER ID        IMAGE                COMMAND                 CREATED             STATUS              PORTS                                                                       NAMES
-388ca8feaee3        spark-worker:2.4.0   "/bin/sh -c /init.sh"   34 seconds ago      Up 33 seconds       8081/tcp                                                                    spark-worker-01
-aad0b9eaab5a        spark-master:2.4.0   "/bin/bash /init.sh"    2 minutes ago       Up 2 minutes        0.0.0.0:32773->6066/tcp, 0.0.0.0:32772->7077/tcp, 0.0.0.0:32771->8080/tcp   spark-master
+388ca8feaee3        spark-worker:2.4.3   "/bin/sh -c /init.sh"   34 seconds ago      Up 33 seconds       8081/tcp                                                                    spark-worker-01
+aad0b9eaab5a        spark-master:2.4.3   "/bin/bash /init.sh"    2 minutes ago       Up 2 minutes        0.0.0.0:32773->6066/tcp, 0.0.0.0:32772->7077/tcp, 0.0.0.0:32771->8080/tcp   spark-master
 ```
 
 For the list of running and stopped docker containers the parameter `-a` is needed:
