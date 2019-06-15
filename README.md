@@ -89,6 +89,22 @@ The explanation of the arguments used is:
 * `--cpus` for setting the number of cores associated to the container
 * `spark-master:2.4.3`: the docker image to run.
 
+##### Bindmounting folders
+
+Usually, when working with spark we are going to need to share data between host machine and the docker container.
+For this purpose we can link a folder from the host machine to a folder on the container. This is called **bindmounting**.
+
+Because we are working with spark, bindmounted folder will only be present on the master node.
+
+The command for running the spark master docker container with a linked folder is as follows:
+
+``` shell
+[sudo] docker run -dP -v path/to/folder/inside/container:path/to/host/folder \
+       --name spark-master -h spark-master --cpus 1 spark-master:2.4.3
+```
+
+* `-v`: is to configure bindmouting.
+
 #### Spark Worker
 
 Analogously, a spark worker can be runned like this:
