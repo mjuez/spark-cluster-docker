@@ -7,15 +7,11 @@
 
 set -eu pipefail
 
-export SPARK_HOME=/spark
+export SPARK_HOME=/usr/local/spark
 
-# configuring and loading spark environment.
-#. "/spark/sbin/spark-config.sh"
-#. "/spark/bin/load-spark-env.sh"
+mkdir -p $LOGS
 
-mkdir -p $SPARK_WORKER_LOGS
+ln -sf /dev/stdout $LOGS/stdout.log
 
-ln -sf /dev/stdout $SPARK_WORKER_LOGS/spark-master.out
-
-/spark/sbin/../bin/spark-class org.apache.spark.deploy.worker.Worker \
---webui-port $SPARK_WORKER_WEBUI_PORT $SPARK_MASTER >> $SPARK_WORKER_LOGS/spark-worker.out
+$SPARK_HOME/bin/spark-class org.apache.spark.deploy.worker.Worker \
+--webui-port $SPARK_WEBUI_PORT $SPARK_MASTER >> $LOGS/spark.log
