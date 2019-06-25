@@ -25,10 +25,10 @@ WORKDIR /usr/local/
 
 RUN set -euxo pipefail && \
     apk add --no-cache wget tar && \
-    wget -t 100 --retry-connrefused -O "${TAR}" "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${TAR}" && \
-    tar zxf "${TAR}" && \
-    rm -fv "${TAR}" && \
-    ln -s "spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION" spark && \
+    wget -t 100 --retry-connrefused -O "${tar}" "https://archive.apache.org/dist/spark/spark-${spark_ver}/${tar}" && \
+    tar zxf "${tar}" && \
+    rm -fv "${tar}" && \
+    ln -s "spark-$spark_ver-bin-hadoop$hadoop_ver" spark && \
     apk del wget tar
 
 WORKDIR /
